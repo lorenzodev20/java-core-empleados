@@ -22,16 +22,16 @@ final public class EmpleadoFijo extends Empleado implements Serializable {
 
     public EmpleadoFijo(BigDecimal porcentajeComision, BigDecimal ventasMes) {
         this();
-        this.porcentajeComision = porcentajeComision;
-        this.ventasMes = ventasMes;
+        setPorcentajeComision(porcentajeComision);
+        setVentasMes(ventasMes);
     }
 
     public EmpleadoFijo(String codigo, String apellidoPaterno, String apellidoMaterno,
                         String nombres, Sexo sexo, Cargo cargo,
                         BigDecimal porcentajeComision, BigDecimal ventasMes) {
         super(codigo, apellidoPaterno, apellidoMaterno, nombres, sexo, cargo);
-        this.porcentajeComision = porcentajeComision;
-        this.ventasMes = ventasMes;
+        setPorcentajeComision(porcentajeComision);
+        setVentasMes(ventasMes);
     }
 
     public BigDecimal getPorcentajeComision() {
@@ -39,6 +39,11 @@ final public class EmpleadoFijo extends Empleado implements Serializable {
     }
 
     public void setPorcentajeComision(BigDecimal porcentajeComision) {
+        BigDecimal cero = BigDecimal.ZERO;
+        BigDecimal cien = BigDecimal.valueOf(100);
+        if (porcentajeComision == null || porcentajeComision.compareTo(cero) < 0 || porcentajeComision.compareTo(cien) > 0) {
+            throw new IllegalArgumentException("El porcentaje de comisión debe estar entre cero o cien");
+        }
         this.porcentajeComision = porcentajeComision;
     }
 
@@ -47,6 +52,9 @@ final public class EmpleadoFijo extends Empleado implements Serializable {
     }
 
     public void setVentasMes(BigDecimal ventasMes) {
+        if (ventasMes == null || ventasMes.compareTo(BigDecimal.ZERO) < 0) {
+            throw new IllegalArgumentException("Las ventas del mes no puede ser menor a cero");
+        }
         this.ventasMes = ventasMes;
     }
 

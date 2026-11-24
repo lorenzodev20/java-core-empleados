@@ -81,7 +81,8 @@ public class PlanillaService {
     public BigDecimal calcularTotalPagos(YearMonth mesProceso) {
         return empleados.stream()
                 .map(e -> e.calcularRemuneracionMensual(mesProceso)) // Polimorfismo puro
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+                .reduce(BigDecimal.ZERO, BigDecimal::add)
+                .setScale(2, RoundingMode.HALF_UP);
     }
 
     // 8. Totalizar pagos por unidad orgánica

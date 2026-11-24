@@ -99,13 +99,16 @@ public class App {
         Entregable ent1 = new Entregable("ENT-01", "Fase 1: Análisis", LocalDate.of(2026, 10, 20), new BigDecimal("2000"), true);
         Entregable ent2 = new Entregable("ENT-02", "Fase 2: Desarrollo", LocalDate.of(2026, 10, 20), new BigDecimal("1500"), true);
         Entregable ent3 = new Entregable("ENT-03", "Fase 3: Pruebas", LocalDate.of(2026, 10, 20), new BigDecimal("500"), false);
+        Entregable ent5 = new Entregable("ENT-05", "Fase 0: Conversación", LocalDate.of(2026, 9, 20), new BigDecimal("900"), true);
         List<Entregable> entregables03 = new ArrayList<>();
         entregables03.add(ent1);
         entregables03.add(ent2);
         entregables03.add(ent3);
+        entregables03.add(ent5);
         ent1.setContrato(contrato3);
         ent2.setContrato(contrato3);
         ent3.setContrato(contrato3);
+        ent5.setContrato(contrato3);
         contrato3.setEntregables(entregables03);
 
         //Empleado 04
@@ -128,7 +131,7 @@ public class App {
         empleado04.setUnidadOrganica(unidadAdmin);
 
         Entregable ent4 = new Entregable("ENT-02", "Fase 2: Desarrollo", LocalDate.of(2026, 10, 20), new BigDecimal("2500"), true);
-        ent3.setContrato(contrato4);
+        ent4.setContrato(contrato4);
         List<Entregable> entregables04 = new ArrayList<>();
         entregables04.add(ent4);
         contrato4.setEntregables(entregables04);
@@ -154,6 +157,134 @@ public class App {
 
         System.out.println("Total por Unidad Orgánica: " + unidadAdmin.getNombreLargo() + " -> S/" + planillaService.totalizarPagosPorUnidad(unidadAdmin, mesProceso));
         System.out.println("Total por Unidad Orgánica: " + unidadTec.getNombreLargo() + " -> S/" + planillaService.totalizarPagosPorUnidad(unidadTec, mesProceso));
+
+        System.out.println("Total Pagos: S/" + planillaService.calcularTotalPagos(mesProceso));
+
+        // Aprobar entregable 03
+        planillaService.aprobarEntregable(ent3);
+
+        System.out.println("=== PLANILLA ACTUALIZADA ===");
+
+        System.out.println("=== PLANILLA DEL MES (" + mesProceso + ") ===");
+        planillaService.listarPlanillaOrdenada(mesProceso, true).forEach(emp -> {
+            System.out.printf("Código: %s | Nombre: %s | Unidad: %s | Cargo: %s |Remuneración: S/ %.2f%n",
+                    emp.getCodigo(),
+                    emp.obtenerNombreCompleto(),
+                    emp.getUnidadOrganica() != null ? emp.getUnidadOrganica().getNombreCorto() : "N/A",
+                    emp.getCargo() != null ? emp.getCargo().getNombreCorto() : "N/A",
+                    emp.calcularRemuneracionMensual(mesProceso));
+        });
+
+        System.out.println("Total por Unidad Orgánica: " + unidadAdmin.getNombreLargo() + " -> S/" + planillaService.totalizarPagosPorUnidad(unidadAdmin, mesProceso));
+        System.out.println("Total por Unidad Orgánica: " + unidadTec.getNombreLargo() + " -> S/" + planillaService.totalizarPagosPorUnidad(unidadTec, mesProceso));
+
+        System.out.println("Total Pagos: S/" + planillaService.calcularTotalPagos(mesProceso));
+
+        System.out.println("===BUSCAR CÓDIGO INEXISTENTE===");
+        System.out.println(planillaService.buscarPorCodigo("E004").isPresent() ? "Código E005 existente" : "Código E005 inexistente");
+        System.out.println(planillaService.buscarPorCodigo("E006").isPresent() ? planillaService.buscarPorCodigo("E006") : "Código E006 inexistente");
+
+        System.out.println("== Intentar código duplicado, comisión 105, monto negativo y contrato con fechas invertidas: rechazar cada operación con un mensaje claro.==");
+
+        try {
+            Empleado empleado05 = new EmpleadoFijo(
+                    "E001",
+                    "Ballesta",
+                    "Oviedo",
+                    "Juana Maria",
+                    Sexo.FEMENINO,
+                    cargoRhh,
+                    BigDecimal.valueOf(100),
+                    BigDecimal.valueOf(100));
+            planillaService.registrarEmpleado(empleado05);
+        } catch (Exception e) {
+            System.out.println("Caso código duplicado");
+            System.out.println("Mensaje de la Exception: " + e.getMessage());
+        }
+
+        try {
+            Empleado empleado05 = new EmpleadoFijo(
+                    "E001",
+                    "Ballesta",
+                    "Oviedo",
+                    "Juana Maria",
+                    Sexo.FEMENINO,
+                    cargoRhh,
+                    BigDecimal.valueOf(-75),
+                    BigDecimal.valueOf(100));
+        } catch (Exception e) {
+            System.out.println("Caso monto negativo porcentaje");
+            System.out.println("Mensaje de la Exception: " + e.getMessage());
+        }
+
+        try {
+            Empleado empleado05 = new EmpleadoFijo(
+                    "E001",
+                    "Ballesta",
+                    "Oviedo",
+                    "Juana Maria",
+                    Sexo.FEMENINO,
+                    cargoRhh,
+                    BigDecimal.valueOf(50),
+                    BigDecimal.valueOf(-100));
+        } catch (Exception e) {
+            System.out.println("Caso monto negativo venta mes");
+            System.out.println("Mensaje de la Exception: " + e.getMessage());
+        }
+
+        try {
+            Empleado empleado05 = new EmpleadoFijo(
+                    "E007",
+                    "Ballesta",
+                    "Oviedo",
+                    "Juana Maria",
+                    Sexo.FEMENINO,
+                    cargoRhh,
+                    BigDecimal.valueOf(100),
+                    BigDecimal.valueOf(500));
+            planillaService.registrarEmpleado(empleado05);
+
+            Contrato contrato6 = new Contrato(fechaFin, fechaInicio, SituacionContrato.ACTIVO, BigDecimal.valueOf(-3000), empleado05);
+            empleado05.agregarContrato(contrato6);
+            empleado05.setUnidadOrganica(unidadAdmin);
+        } catch (Exception e) {
+            System.out.println("Caso contrato fechas invertidas");
+            System.out.println("Mensaje de la Exception: " + e.getMessage());
+        }
+
+        try {
+            Empleado empleado05 = new EmpleadoFijo(
+                    "E087",
+                    "Ballesta",
+                    "Oviedo",
+                    "Juana Maria",
+                    Sexo.FEMENINO,
+                    cargoRhh,
+                    BigDecimal.valueOf(100),
+                    BigDecimal.valueOf(500));
+            planillaService.registrarEmpleado(empleado05);
+
+            Contrato contrato6 = new Contrato(LocalDate.parse("2026-10-05"), LocalDate.parse("2026-10-03"), SituacionContrato.ACTIVO, BigDecimal.valueOf(-3000), empleado05);
+            empleado05.agregarContrato(contrato6);
+            empleado05.setUnidadOrganica(unidadAdmin);
+        } catch (Exception e) {
+            System.out.println("Caso contrato fechas invertidas");
+            System.out.println("Mensaje de la Exception: " + e.getMessage());
+        }
+
+        System.out.println("==Finalizar el contrato de E002: excluirlo de la planilla y devolver 0 en su cálculo. Ejecutar este escenario de forma independiente sobre los datos iniciales: total esperado S/ 9 800.==");
+        contrato2.setSituacionContrato(SituacionContrato.FINALIZADO);
+        planillaService.retirarEmpleado("E002");
+        System.out.println("=== PLANILLA DEL MES (" + mesProceso + ") ===");
+        planillaService.listarPlanillaOrdenada(mesProceso, true).forEach(emp -> {
+            System.out.printf("Código: %s | Nombre: %s | Unidad: %s | Cargo: %s |Remuneración: S/ %.2f%n",
+                    emp.getCodigo(),
+                    emp.obtenerNombreCompleto(),
+                    emp.getUnidadOrganica() != null ? emp.getUnidadOrganica().getNombreCorto() : "N/A",
+                    emp.getCargo() != null ? emp.getCargo().getNombreCorto() : "N/A",
+                    emp.calcularRemuneracionMensual(mesProceso));
+        });
+
     }
 
     private static Empresa crearDatosBaseDeEmpresa() {

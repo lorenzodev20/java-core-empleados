@@ -21,14 +21,14 @@ Alcance: aplicación en memoria, con datos de prueba y ejecución desde `main`. 
 | 3 | Implementar la jerarquía de empleados y el cálculo polimórfico. | 35 min |
 | 4 | Gestionar relaciones, contratos y entregables mediante colecciones. | 30 min |
 | 5 | Ejecutar consultas, escenarios de cálculo y validaciones. | 30 min |
-| 6 | Preparar el README, el UML actualizado y las evidencias. | 15 min |
+| 6 | Preparar el README y las evidencias (diagrama UML opcional). | 15 min |
 | | **Total de desarrollo** | **150 min** |
 
 Modalidad sugerida: individual o en parejas. Demostración y revisión: 10 minutos adicionales. Prerrequisito: JDK 26 o superior y un IDE de Java.
 
 ## IV. Modelo de clases a implementar
 
-Conservar los nombres del diagrama. Las siguientes precisiones completan el modelo para que sea implementable y evaluable; deben reflejarse en el UML actualizado.
+Conservar los nombres del diagrama. Las siguientes precisiones completan el modelo para que sea implementable y evaluable (el diagrama UML actualizado es opcional).
 
 | Clase o tipo | Responsabilidad y atributos mínimos |
 |---|---|
@@ -119,7 +119,7 @@ Usar `BigDecimal` para dinero y porcentajes, con redondeo a dos decimales median
 ## IX. Entregables del participante
 
 1. Proyecto Java con código fuente organizado en paquetes, sin archivos compilados ni dependencias innecesarias.
-2. Diagrama UML actualizado con visibilidad, herencia, clases abstractas y finales, multiplicidades, agregación y composición.
+2. *(Opcional)* Diagrama UML actualizado con visibilidad, herencia, clases abstractas y finales, multiplicidades, agregación y composición.
 3. README con requisitos, instrucciones exactas de compilación y ejecución, decisiones del modelo y fórmulas aplicadas.
 4. Evidencias de ejecución de los cinco escenarios, con entradas, resultados esperados y resultados obtenidos.
 
@@ -136,7 +136,7 @@ Mostrar la jerarquía y explicar qué clases no pueden instanciarse o extenderse
 | Encapsulación y final | Atributos privados, reglas validadas, colecciones protegidas, id inmutable y clases finales justificadas. | 3 |
 | Relaciones del dominio | Asociaciones consistentes; agregación y composición demostradas con multiplicidades y control de pertenencia. | 3 |
 | Colecciones y consultas | `List` y `Map` tipados y consistentes; búsqueda, filtros, orden y totales por unidad correctos. | 3 |
-| Ejecución y entrega | Cinco escenarios verificables, programa ejecutable, README y UML coherentes con el código. | 3 |
+| Ejecución y entrega | Cinco escenarios verificables, programa ejecutable y README coherente con el código *(sin requisito de diagrama UML en la rúbrica)*. | 3 |
 | **Total** | | **20** |
 
 Escala por criterio: asignar el máximo si cumple toda la evidencia; la mitad si la implementación funciona parcialmente o la evidencia está incompleta; y 0 si está ausente o no funciona. Se permiten medios puntos. La suma máxima es 20.

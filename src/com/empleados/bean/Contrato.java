@@ -26,10 +26,10 @@ public class Contrato extends EntidadBase {
 
     public Contrato(LocalDate fechaInicio, LocalDate fechaTermino, SituacionContrato situacionContrato, BigDecimal sueldo, Empleado empleado) {
         this();
-        this.fechaInicio = fechaInicio;
-        this.fechaTermino = fechaTermino;
+        setFechaInicio(fechaInicio);
+        setFechaTermino(fechaTermino);
         this.situacionContrato = situacionContrato;
-        this.sueldo = sueldo;
+        setSueldo(sueldo);
         this.empleado = empleado;
     }
 
@@ -38,6 +38,12 @@ public class Contrato extends EntidadBase {
     }
 
     public void setFechaInicio(LocalDate fechaInicio) {
+        if (fechaInicio == null) {
+            throw new IllegalArgumentException("La fecha de inicio es obligatoria");
+        }
+        if (this.fechaTermino != null && fechaInicio.isAfter(this.fechaTermino)) {
+            throw new IllegalArgumentException("La fecha de inicio no puede ser posterior a la fecha de término");
+        }
         this.fechaInicio = fechaInicio;
     }
 
@@ -46,6 +52,12 @@ public class Contrato extends EntidadBase {
     }
 
     public void setFechaTermino(LocalDate fechaTermino) {
+        if (fechaTermino == null) {
+            throw new IllegalArgumentException("La fecha de inicio es obligatoria");
+        }
+        if (fechaTermino.isBefore(this.fechaInicio)) {
+            throw new IllegalArgumentException("La fecha de fin no puede ser inferior a la fecha de término");
+        }
         this.fechaTermino = fechaTermino;
     }
 
@@ -62,6 +74,9 @@ public class Contrato extends EntidadBase {
     }
 
     public void setSueldo(BigDecimal sueldo) {
+        if (sueldo == null || sueldo.compareTo(BigDecimal.ZERO) < 0) {
+            throw new IllegalArgumentException("El monto no puede ser menor a cero");
+        }
         this.sueldo = sueldo;
     }
 

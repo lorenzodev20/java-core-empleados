@@ -35,13 +35,10 @@ public abstract class Empleado extends EntidadBase implements Serializable {
 
     public Empleado(String codigo, String apellidoPaterno, String apellidoMaterno, String nombres, Sexo sexo, Cargo cargo) {
         this(); // Debe ser la primera línea
-        if (codigo == null || codigo.isBlank()) {
-            throw new IllegalArgumentException("El código de empleado es obligatorio");
-        }
+        setCodigo(codigo.trim());
         if ((nombres == null || nombres.isBlank()) || (apellidoPaterno == null || apellidoPaterno.isBlank())) {
             throw new IllegalArgumentException("Los nombres y/o apellidos son obligatorios");
         }
-        this.codigo = codigo.trim();
         this.apellidoPaterno = apellidoPaterno.trim();
         this.apellidoMaterno = apellidoMaterno != null ? apellidoMaterno.trim() : null;
         this.nombres = nombres.trim();
@@ -92,6 +89,9 @@ public abstract class Empleado extends EntidadBase implements Serializable {
     }
 
     public void setCodigo(String codigo) {
+        if (codigo == null || codigo.isBlank()) {
+            throw new IllegalArgumentException("El código de empleado es obligatorio");
+        }
         this.codigo = codigo;
     }
 
