@@ -4,6 +4,7 @@ import com.empleados.bean.*;
 import com.empleados.enums.SituacionContrato;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.YearMonth;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -69,10 +70,10 @@ public class PlanillaService {
     }
 
     // 6. Listar planilla ordenada por nombre completo (solo empleados con remuneración > 0 / contrato activo vigente)
-    public List<Empleado> listarPlanillaOrdenada(YearMonth mesProceso) {
+    public List<Empleado> listarPlanillaOrdenada(YearMonth mesProceso, boolean byCodigo) {
         return empleados.stream()
-                .filter(e -> e.calcularRemuneracionMensual(mesProceso).compareTo(BigDecimal.ZERO) > 0)
-                .sorted(Comparator.comparing(Empleado::obtenerNombreCompleto, String.CASE_INSENSITIVE_ORDER))
+                .filter(e -> e.calcularRemuneracionMensual(mesProceso).compareTo(BigDecimal.ZERO) >= 0)
+                .sorted(Comparator.comparing(byCodigo?Empleado::getCodigo : Empleado::obtenerNombreCompleto, String.CASE_INSENSITIVE_ORDER))
                 .collect(Collectors.toList());
     }
 
@@ -87,6 +88,7 @@ public class PlanillaService {
     public BigDecimal totalizarPagosPorUnidad(UnidadOrganica unidad, YearMonth mesProceso) {
         return listarPorUnidad(unidad).stream()
                 .map(e -> e.calcularRemuneracionMensual(mesProceso)) // Polimorfismo puro
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+                .reduce(BigDecimal.ZERO, BigDecimal::add)
+                .setScale(2, RoundingMode.HALF_UP);
     }
 }

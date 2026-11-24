@@ -14,14 +14,22 @@ final public class EmpleadoFijo extends Empleado implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private BigDecimal porcentajeComision;
-    private int ventasMes;
+    private BigDecimal ventasMes;
 
     public EmpleadoFijo() {
         super();
     }
 
-    public EmpleadoFijo(BigDecimal porcentajeComision, int ventasMes) {
+    public EmpleadoFijo(BigDecimal porcentajeComision, BigDecimal ventasMes) {
         this();
+        this.porcentajeComision = porcentajeComision;
+        this.ventasMes = ventasMes;
+    }
+
+    public EmpleadoFijo(String codigo, String apellidoPaterno, String apellidoMaterno,
+                        String nombres, Sexo sexo, Cargo cargo,
+                        BigDecimal porcentajeComision, BigDecimal ventasMes) {
+        super(codigo, apellidoPaterno, apellidoMaterno, nombres, sexo, cargo);
         this.porcentajeComision = porcentajeComision;
         this.ventasMes = ventasMes;
     }
@@ -34,11 +42,11 @@ final public class EmpleadoFijo extends Empleado implements Serializable {
         this.porcentajeComision = porcentajeComision;
     }
 
-    public int getVentasMes() {
+    public BigDecimal getVentasMes() {
         return ventasMes;
     }
 
-    public void setVentasMes(int ventasMes) {
+    public void setVentasMes(BigDecimal ventasMes) {
         this.ventasMes = ventasMes;
     }
 
@@ -50,7 +58,7 @@ final public class EmpleadoFijo extends Empleado implements Serializable {
             return BigDecimal.ZERO;
         }
         BigDecimal sueldoBase = contratoActivo.getSueldo() != null ? contratoActivo.getSueldo() : BigDecimal.ZERO;
-        BigDecimal ventas = this.ventasMes != 0? BigDecimal.valueOf(this.ventasMes) : BigDecimal.ZERO;
+        BigDecimal ventas = this.ventasMes.equals(BigDecimal.ZERO) ? BigDecimal.ZERO : this.ventasMes;
         BigDecimal porcentaje = this.porcentajeComision != null ? this.porcentajeComision : BigDecimal.ZERO;
 
         BigDecimal comision = ventas.multiply(porcentaje)
